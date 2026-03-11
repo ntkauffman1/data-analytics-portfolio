@@ -179,11 +179,7 @@ elif page == "Reference Guide":
     SQL queries, and data visualization techniques.
     """)
     
+    st.info("Click below to open the live reference app in a new, full-screen tab.")
+    
     # A professional button to open the app in a new tab
-    st.link_button("Launch Full Reference Guide App ↗️", "https://analyst-reference-guide-ntkauffman1.streamlit.app/", use_container_width=True)
-    
-    st.divider()
-    
-    # Embedding the app directly into your portfolio!
-    st.subheader("Live Preview")
-    components.iframe("https://analyst-reference-guide-ntkauffman1.streamlit.app/", height=800, scrolling=True)
+    st.link_button("Launch Full Reference Guide App ↗️", "https://analyst-reference-guide-ntkauffman1.streamlit.app/", type="primary", use_container_width=True)
