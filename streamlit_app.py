@@ -172,13 +172,153 @@ elif page == "Trivia Scoreboard":
                 st.session_state.feedback_msg = "READY TO PLAY"
                 st.rerun()
 
-elif page == "Alien Invasion Game":
-    st.title("🛸 Alien Invasion Game")
-    st.info("Interactive Python game coming soon.")
-
 elif page == "IMDB Insights":
     st.title("🎬 Case Study: IMDB Data Warehouse")
-    st.info("This section will eventually connect to my SQL database to show movie trends.")
+    
+    st.markdown("""
+    ### Project Overview
+    This project demonstrates the extraction, transformation, and loading (ETL) of IMDB movie data into a relational database. 
+    I utilized **SQL Server (T-SQL)** to clean dirty CSV data, handle string conversions, remove duplicates, and build a normalized Data Warehouse view for Power BI.
+    """)
+    st.divider()
+    
+    st.subheader("🔍 SQL Portfolio Showcase")
+    st.write("Select a script below to see the T-SQL logic I wrote, followed by a live preview of the cleaned dataset:")
+    
+    query_selection = st.selectbox("Select Script:", [
+        "1. ETL: Dynamic Data Cleaning (Votes)",
+        "2. Analysis: The Decade Trend",
+        "3. Analysis: Genre Dominance",
+        "4. ETL: The Final Power BI View"
+    ])
+    
+    import sqlite3
+    import os
+    import pandas as pd
+    
+    # --- AUTO-BUILD THE DATABASE ---
+    if not os.path.exists('imdb.db'):
+        try:
+            raw_df = pd.read_csv('IMBD_Final_CSV.csv')
+            
+            raw_df.columns = raw_df.columns.str.strip()
+            
+            # THE BUG FIX: SQLite crashes if it sees 'title' and 'Title'. We drop the lowercase one.
+            if 'title' in raw_df.columns:
+                raw_df = raw_df.drop(columns=['title'])
+                
+            setup_conn = sqlite3.connect('imdb.db')
+            raw_df.to_sql('movies', setup_conn, if_exists='replace', index=False)
+            setup_conn.close()
+        except FileNotFoundError:
+            st.error("Missing 'IMBD_Final_CSV.csv'. Please upload it to GitHub!")
+            st.stop() 
+            
+    try:
+        conn = sqlite3.connect('imdb.db')
+        
+        # --- SCRIPT 1: DATA CLEANING ---
+        if query_selection == "1. ETL: Dynamic Data Cleaning (Votes)":
+            st.markdown("**Objective:** Convert a dirty string column containing 'M' (millions) and 'K' (thousands) into a usable numeric format for aggregation.")
+            
+            st.code('''
+            -- Run the update logic to convert K/M suffixes into real numbers
+            UPDATE Movies
+            SET Votes_Clean = CASE 
+                WHEN Votes LIKE '%M' THEN TRY_CAST(REPLACE(Votes, 'M', '') AS DECIMAL(10,2)) * 1000000
+                WHEN Votes LIKE '%K' THEN TRY_CAST(REPLACE(Votes, 'K', '') AS DECIMAL(10,2)) * 1000
+                ELSE TRY_CAST(REPLACE(Votes, ',', '') AS DECIMAL(10,2))
+            END;
+            ''', language='sql')
+            
+            st.markdown("**Live Result:** *(Notice the cleaned 'Votes' and Popularity columns from the final dataset)*")
+            
+            # MATCHING YOUR EXACT CSV COLUMNS
+            query = 'SELECT Title, "Start Year", Votes, "Popularity Tier" FROM movies LIMIT 15'
+            df = pd.read_sql_query(query, conn)
+            st.dataframe(df, use_container_width=True)
+            
+        # --- SCRIPT 2: DECADE TREND ---
+        elif query_selection == "2. Analysis: The Decade Trend":
+            st.markdown("**Objective:** Group movies by decade using mathematical functions to see if average ratings change over time.")
+            
+            st.code('''
+            -- Using Math (FLOOR) to group years into bins (e.g., 1994 becomes 1990)
+            SELECT 
+                FLOOR(Start_Year / 10) * 10 AS Decade,
+                COUNT(*) AS Total_Movies,
+                CAST(AVG(Rating) AS DECIMAL(10,2)) AS Avg_Rating
+            FROM Movies
+            WHERE Start_Year IS NOT NULL
+            GROUP BY FLOOR(Start_Year / 10) * 10
+            ORDER BY Decade DESC;
+            ''', language='sql')
+            
+            # USING YOUR EXISTING DECADE COLUMN
+            query = 'SELECT Decade, COUNT(*) AS Total_Movies, ROUND(AVG(Rating), 2) AS Avg_Rating FROM movies WHERE Decade IS NOT NULL GROUP BY Decade ORDER BY Decade DESC'
+            df = pd.read_sql_query(query, conn)
+            
+            col1, col2 = st.columns([1, 2])
+            with col1:
+                st.dataframe(df, use_container_width=True)
+            with col2:
+                st.line_chart(data=df.set_index('Decade')['Avg_Rating'])
+
+        # --- SCRIPT 3: GENRE DOMINANCE ---
+        elif query_selection == "3. Analysis: Genre Dominance":
+            st.markdown("**Objective:** Identify which genres produce the most content and calculate their average quality.")
+            
+            st.code('''
+            -- Which genres produce the most content?
+            SELECT TOP 10
+                Genre,
+                COUNT(*) AS Movie_Count,
+                CAST(AVG(Rating) AS DECIMAL(10,2)) AS Genre_Avg_Rating
+            FROM Movies
+            GROUP BY Genre
+            ORDER BY Movie_Count DESC;
+            ''', language='sql')
+            
+            query = "SELECT Genre, COUNT(*) AS Movie_Count, ROUND(AVG(Rating), 2) AS Genre_Avg_Rating FROM movies WHERE Genre IS NOT NULL GROUP BY Genre ORDER BY Movie_Count DESC LIMIT 10"
+            df = pd.read_sql_query(query, conn)
+            
+            col1, col2 = st.columns([1, 2])
+            with col1:
+                st.dataframe(df, use_container_width=True)
+            with col2:
+                st.bar_chart(data=df.set_index('Genre')['Movie_Count'])
+
+        # --- SCRIPT 4: THE FINAL VIEW ---
+        elif query_selection == "4. ETL: The Final Power BI View":
+            st.markdown("**Objective:** Create a clean, standardized View that Power BI can connect to directly, ensuring 100% data integrity.")
+            
+            st.code('''
+            CREATE OR ALTER VIEW v_Master_Movies AS
+            SELECT
+                Title,
+                Start_Year,
+                FLOOR(Start_Year / 10) * 10 AS Decade,
+                CAST(Rating AS DECIMAL(10,2)) AS Rating,
+                Votes_Clean AS Votes, 
+                TRIM(Genre) AS Genre,
+                CASE
+                    WHEN Votes_Clean >= 10000 THEN 'High Popularity'
+                    WHEN Votes_Clean >= 1000 THEN 'Medium Popularity'
+                    ELSE 'Low Popularity'
+                END AS Popularity_Category,
+                REPLACE(REPLACE(Description, CHAR(13), ''), CHAR(10), '') AS Cleaned_Description,
+                Stars
+            FROM Movies;
+            ''', language='sql')
+            
+            st.markdown("**Final Power BI Dataset Preview:**")
+            df = pd.read_sql_query("SELECT * FROM movies LIMIT 100", conn)
+            st.dataframe(df, use_container_width=True)
+            
+        conn.close()
+        
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
 
 elif page == "Reference Guide":
     st.title("📚 Reference Guide")
