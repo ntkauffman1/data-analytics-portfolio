@@ -349,17 +349,19 @@ FROM Movies;
         st.markdown("""
         Before the data reached the SQL Warehouse, I utilized Microsoft Excel to perform initial auditing and sanity checks.
         
-        **Cleaning Logic Applied:**
+        **Cleaning Logic and Steps Applied:**
         - **Data Auditing:** Used Pivot Tables to identify inconsistent naming and rating outliers.
         - **Formatting:** Normalized the `Start Year` column and stripped hidden whitespace.
         - **VLOOKUP:** Cross-referenced title lists to ensure data integrity across exports.
+        - **Macro:** Update Dashboard Macro added to Pivot Tab.
+        - **Documentation:** Steps, Formulas, and Logic documented in Deliverables Tab.
         """)
         try:
             with open("IMBD_Cleaned_Final.xlsm", "rb") as file:
                 st.download_button(
                     label="📂 Download Cleaned Excel Workbook (.xlsm)",
                     data=file,
-                    file_name="Neal_Kauffman_IMDB_Prep.xlsm",
+                    file_name="IMDB_Cleaned_Final.xlsm",
                     mime="application/vnd.ms-excel.sheet.macroEnabled.12"
                 )
         except FileNotFoundError:
