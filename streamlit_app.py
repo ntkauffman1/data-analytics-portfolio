@@ -45,6 +45,15 @@ if page == "Home":
 
 elif page == "About Me":
     st.title("👨‍💻 About Me")
+    # 1. ADD YOUR PHOTO HERE
+    # Ensure this filename EXACTLY matches the file in your folder!
+    # I included a try/except block so your app won't crash if the file is missing locally.
+    photo_filename = "495352114_10162816845657138_4891462490022732075_n.jpg"
+    
+    try:
+        st.image(photo_filename, caption="Neal Kauffman", width=250)
+    except FileNotFoundError:
+        st.error(f"Image not found. Please place '{photo_filename}' in your VS Code folder.")
     st.markdown("""
     I am currently an Online Data Researcher with a strong foundation in Python and SQL. 
     
