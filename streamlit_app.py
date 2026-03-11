@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
+import streamlit.components.v1 as components
 
-# 1. Page Configuration (The "Professional" Look)
+# 1. Page Configuration
 st.set_page_config(page_title="Neal Kauffman | Data Portfolio", page_icon="📊", layout="wide")
 
 # --- INITIALIZE SESSION STATE FOR SCOREBOARD ---
-# We put this at the top so the app remembers the score even if you click away to the Home page
 if 'step' not in st.session_state:
-    st.session_state.step = 1 # Step 1: Count, Step 2: Names, Step 3: Game
+    st.session_state.step = 1 
 if 'num_teams' not in st.session_state:
     st.session_state.num_teams = 2
 if 'teams' not in st.session_state:
@@ -15,16 +15,42 @@ if 'teams' not in st.session_state:
 if 'feedback_msg' not in st.session_state:
     st.session_state.feedback_msg = "READY TO PLAY"
 
-# 2. Navigation Sidebar
+# --- 2. DYNAMIC NAVIGATION SIDEBAR ---
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to:", ["Home", "Trivia Scoreboard", "IMDB Insights", "Alien Invasion Game"])
 
-# 3. Page Logic
+# Category Dropdown
+category = st.sidebar.selectbox("Choose a Section:", 
+    ["Main", "Games/Apps", "Case Studies", "Resources"]
+)
+
+# Sub-page routing based on the chosen category
+if category == "Main":
+    page = st.sidebar.radio("Go to:", ["Home", "About Me"])
+elif category == "Games/Apps":
+    page = st.sidebar.radio("Go to:", ["Trivia Scoreboard", "Alien Invasion Game"])
+elif category == "Case Studies":
+    page = st.sidebar.radio("Go to:", ["IMDB Insights"])
+elif category == "Resources":
+    page = st.sidebar.radio("Go to:", ["Reference Guide"])
+
+
+# --- 3. PAGE LOGIC ---
+
 if page == "Home":
     st.title("📊 Neal Kauffman: Data Analytics Portfolio")
     st.markdown("""
-    Welcome! I am a **Computer Information Systems** student at Collin College transitioning into 
-    Data Analytics. This site showcases my work in **Python**, **SQL**, and **Analysis**.
+    Welcome! I am a **Computer Systems** student at Collin College transitioning into 
+    Data Analytics. This site showcases my work in **Python**, **SQL**, and **Web Analysis**.
+    """)
+
+elif page == "About Me":
+    st.title("👨‍💻 About Me")
+    st.markdown("""
+    I am currently an Online Data Researcher with a strong foundation in Python and SQL. 
+    
+    Before pursuing my degree in Computer Systems and transitioning into data analytics, I spent several years managing fast-paced environments in the restaurant industry as a Front of House Manager and Bartender. 
+    
+    This background gave me a unique perspective on customer experience, daily operations, and the critical importance of making accurate, data-driven business decisions to improve efficiency.
     """)
 
 elif page == "Trivia Scoreboard":
@@ -137,10 +163,27 @@ elif page == "Trivia Scoreboard":
                 st.session_state.feedback_msg = "READY TO PLAY"
                 st.rerun()
 
+elif page == "Alien Invasion Game":
+    st.title("🛸 Alien Invasion Game")
+    st.info("Interactive Python game coming soon.")
+
 elif page == "IMDB Insights":
-    st.title("🎬 IMDB Data Warehouse")
+    st.title("🎬 Case Study: IMDB Data Warehouse")
     st.info("This section will eventually connect to my SQL database to show movie trends.")
 
-elif page == "Alien Invasion Game":
-    st.title("Alien Invasion ")
-    st.info("This will be where the interactive Alien invasion game will go.")
+elif page == "Reference Guide":
+    st.title("📚 Reference Guide")
+    st.markdown("""
+    As part of my continuous learning and workflow optimization, I built and maintain a standalone 
+    **Data Analyst Reference Guide**. It serves as a live documentation tool for Python syntax, 
+    SQL queries, and data visualization techniques.
+    """)
+    
+    # A professional button to open the app in a new tab
+    st.link_button("Launch Full Reference Guide App ↗️", "https://analyst-reference-guide-ntkauffman1.streamlit.app/", use_container_width=True)
+    
+    st.divider()
+    
+    # Embedding the app directly into your portfolio!
+    st.subheader("Live Preview")
+    components.iframe("https://analyst-reference-guide-ntkauffman1.streamlit.app/", height=800, scrolling=True)
