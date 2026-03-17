@@ -9,9 +9,9 @@ st.set_page_config(page_title="Neal Kauffman | Data Portfolio", page_icon="📊"
 # --- CUSTOM CSS FOR HIGH-VISIBILITY TABS ---
 st.markdown("""
     <style>
-    /* Make the tab text much larger and bold */
+    /* Make the tab text much larger and bold (Adjusted to 18px to fit 5 tabs) */
     button[data-baseweb="tab"] {
-        font-size: 24px !important;
+        font-size: 18px !important;
         font-weight: bold !important;
         color: #555;
     }
@@ -235,11 +235,22 @@ from ship import Ship
 elif page == "IMDB Insights":
     st.title("🎬 Case Study: IMDB Data Warehouse")
     
-    # --- BIG TABS ---
-    tab_sql, tab_excel = st.tabs(["SQL Cleaning Scripts & Queries", "Excel Data Prep"])
+    # --- 5 BIG TABS ---
+    tab_sql, tab_excel, tab_pbi, tab_python, tab_html = st.tabs([
+        "SQL Cleaning Scripts & Queries", 
+        "Excel Data Prep",
+        "Power BI Dashboard", 
+        "Python Correlation Analysis", 
+        "HTML Project Landing Page"
+    ])
 
     with tab_sql:
         st.subheader("🔍 SQL Portfolio Showcase")
+        
+        # --- NEW ADDITION: Link to SQL file ---
+        st.link_button("📂 View Full .SQL Script on GitHub ↗️", 
+                       "https://github.com/ntkauffman/portfolio/blob/main/IMDB_Project_Queries_Revised.sql")
+        
         st.write("Select a script below to see the T-SQL logic I wrote, followed by a live preview:")
         
         query_selection = st.selectbox("Select Script:", [
@@ -356,6 +367,19 @@ FROM Movies;
         - **Macro:** Update Dashboard Macro added to Pivot Tab.
         - **Documentation:** Steps, Formulas, and Logic documented in Deliverables Tab.
         """)
+        
+        # --- NEW ADDITION: Raw Data Download ---
+        try:
+            with open("IMDB_Raw_Data.csv", "rb") as raw_file:
+                st.download_button(
+                    label="📄 Download Raw Data (.csv)",
+                    data=raw_file,
+                    file_name="IMDB_Raw_Data.csv",
+                    mime="text/csv"
+                )
+        except FileNotFoundError:
+            st.warning("Raw Data file 'IMDB_Raw_Data.csv' not found in the repository.")
+            
         try:
             with open("IMBD_Cleaned_Final.xlsm", "rb") as file:
                 st.download_button(
@@ -366,6 +390,90 @@ FROM Movies;
                 )
         except FileNotFoundError:
             st.warning("Excel file 'IMBD_Cleaned_Final.xlsm' not found in the repository.")
+
+    # =========================================================================
+    # TAB 3: POWER BI
+    # =========================================================================
+    with tab_pbi:
+        st.subheader("📈 Executive Power BI Dashboard")
+        st.markdown("""
+        I connected Power BI directly to the cleaned SQL Data Warehouse to build an interactive dashboard tracking genre performance and rating trends over time. 
+        This acts as the final reporting layer for business stakeholders.
+        """)
+        
+        try:
+            st.image("dashboard.png", caption="IMDB Analytics Interactive Dashboard", use_container_width=True)
+        except FileNotFoundError:
+            st.warning("Upload 'dashboard.png' to GitHub to see the image preview here.")
+            
+        col1, col2 = st.columns(2)
+        with col1:
+            try:
+                with open("IMDB_Analytics_Dashboard.pbix", "rb") as file:
+                    st.download_button("📊 Download Interactive .pbix File", data=file, file_name="IMDB_Analytics_Dashboard.pbix", mime="application/octet-stream")
+            except FileNotFoundError: pass
+        with col2:
+            try:
+                with open("IMDB_Analytics_Dashboard.pdf", "rb") as file:
+                    st.download_button("📄 Download Dashboard as PDF", data=file, file_name="IMDB_Analytics_Dashboard.pdf", mime="application/pdf")
+            except FileNotFoundError: pass
+
+    # =========================================================================
+    # TAB 4: PYTHON ANALYSIS
+    # =========================================================================
+    with tab_python:
+        st.subheader("🐍 Python Statistical Analysis")
+        st.markdown("""
+        Using `pandas`, `seaborn`, and `pyodbc`, I connected directly to the SQL Server to analyze statistical correlations. 
+        Specifically, I wanted to answer: *Does the popularity of a movie (Votes) correlate with higher Ratings?*
+        """)
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            try:
+                st.image("heatmap.png", caption="Correlation Heatmap Matrix", use_container_width=True)
+            except FileNotFoundError: pass
+        with col2:
+            try:
+                st.image("scatter_plot.png", caption="Votes vs. Rating Scatter Plot", use_container_width=True)
+            except FileNotFoundError: pass
+            
+        st.markdown("### Raw Python Script (`movie_analysis.py`)")
+        try:
+            with open("movie_analysis.py", "r", encoding="utf-8") as f:
+                st.code(f.read(), language='python')
+                
+            with open("movie_analysis.py", "rb") as f:
+                st.download_button("⬇️ Download Python Script", data=f, file_name="movie_analysis.py", mime="text/x-python-script")
+        except FileNotFoundError:
+            st.warning("Upload 'movie_analysis.py' to GitHub to view the code.")
+
+# =========================================================================
+    # TAB 5: HTML SUMMARY
+    # =========================================================================
+    with tab_html:
+        st.subheader("🌐 HTML Project Findings Page")
+        st.markdown("""
+        To present these findings to non-technical stakeholders, I built a lightweight HTML/CSS landing page. 
+        This demonstrates my ability to communicate data insights effectively across web formats.
+        """)
+        
+        try:
+            with open("index.html", "r", encoding="utf-8") as f:
+                html_data = f.read()
+                
+                # 1. This renders the actual live webpage inside your app!
+                import streamlit.components.v1 as components
+                components.html(html_data, height=600, scrolling=True)
+                
+                # 2. This puts the raw code inside a dropdown menu so it doesn't clutter the screen
+                with st.expander("🔍 View Raw HTML Code"):
+                    st.code(html_data, language='html')
+                
+            with open("index.html", "rb") as f:
+                st.download_button("⬇️ Download Raw index.html", data=f, file_name="index.html", mime="text/html")
+        except FileNotFoundError:
+            st.warning("Upload 'index.html' to GitHub to view the project.")
 
 elif page == "Reference Guide":
     st.title("📚 Reference Guide")
