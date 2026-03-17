@@ -247,9 +247,17 @@ elif page == "IMDB Insights":
     with tab_sql:
         st.subheader("🔍 SQL Portfolio Showcase")
         
-        # --- NEW ADDITION: Link to SQL file ---
-        st.link_button("📂 View Full .SQL Script on GitHub ↗️", 
-                       "https://github.com/ntkauffman/Neal-Kauffman-Data-Analytics-Portfolio/blob/main/IMDB_Project_Queries_Revised.sql")
+       # --- NEW ADDITION: Download SQL file ---
+        try:
+            with open("IMDB_Project_Queries_Revised.sql", "rb") as sql_file:
+                st.download_button(
+                    label="📂 Download Full T-SQL Script (.sql)",
+                    data=sql_file,
+                    file_name="IMDB_Project_Queries_Revised.sql",
+                    mime="application/sql"
+                )
+        except FileNotFoundError:
+            st.warning("SQL file 'IMDB_Project_Queries_Revised.sql' not found in the repository.")
         
         st.write("Select a script below to see the T-SQL logic I wrote, followed by a live preview:")
         
