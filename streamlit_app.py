@@ -249,7 +249,7 @@ elif page == "IMDB Insights":
         
         # --- NEW ADDITION: Link to SQL file ---
         st.link_button("📂 View Full .SQL Script on GitHub ↗️", 
-                       "https://github.com/ntkauffman/portfolio/blob/main/IMDB_Project_Queries_Revised.sql")
+                       "https://github.com/ntkauffman/Neal-Kauffman-Data-Analytics-Portfolio/blob/main/IMDB_Project_Queries_Revised.sql")
         
         st.write("Select a script below to see the T-SQL logic I wrote, followed by a live preview:")
         
