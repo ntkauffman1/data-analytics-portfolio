@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDB Analytics Case Study</title>
+    <style>
+        /* --- CSS STYLING --- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-left: 5px solid var(--accent-color);
+            padding-left: 15px;
+            margin-top: 0;
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .metric-box {
+            background: #eef2f5;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .metric-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        code {
+            background-color: #eef;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>IMDB Analytics: Popularity vs. Quality</h1>
+            <p class="subtitle">A Full-Stack Data Analysis Portfolio Project</p>
+            <div class="tech-stack" style="justify-content: center;">
+                <span class="badge">Excel</span>
+                <span class="badge">SQL Server</span>
+                <span class="badge">Power BI</span>
+                <span class="badge">Python</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2>📌 Project Overview</h2>
+            <p>
+                Does a massive marketing budget and millions of votes guarantee a high-quality movie? 
+                This project investigates the relationship between <strong>Popularity (Votes)</strong> and 
+                <strong>Quality (IMDB Rating)</strong> by analyzing over 8,000 movie records.
+            </p>
+            <p>
+                The workflow simulated a real-world data pipeline: auditing raw dirty data, engineering a clean SQL warehouse, 
+                building interactive dashboards, and performing statistical hypothesis testing.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>🔍 Key Findings</h2>
+            <div class="metric-grid">
+                <div class="metric-box">
+                    <span class="metric-number">0.2</span>
+                    Correlation (Votes vs Rating)
+                </div>
+                <div class="metric-box">
+                    <span class="metric-number">8,040</span>
+                    Total Movies Analyzed
+                </div>
+                <div class="metric-box">
+                    <span class="metric-number">Top 2</span>
+                    Genres: Drama & Comedy
+                </div>
+            </div>
+            <ul>
+                <li><strong>The Fan Effect:</strong> A weak correlation (0.2) proves that popularity does not equal quality.</li>
+                <li><strong>The Safe Zone:</strong> While high votes don't guarantee a masterpiece, they act as a quality floor. Movies with 1M+ votes rarely drop below a 7.0 rating.</li>
+                <li><strong>Quality Decline:</strong> Average movie ratings have shown a slight downward trend in the post-2000 digital era.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📸 Visuals & Data Story</h2>
+
+            <h3>1. Statistical Overview (Correlation Matrix)</h3>
+            <p>
+                Generated using Python's Seaborn library, this heatmap shows the mathematical relationship between variables. 
+                The dark purple square (0.2) at the intersection of "Votes" and "Rating" was the primary indicator that 
+                marketing hype (popularity) has very little connection to actual movie quality.
+            </p>
+            <img src="heatmap.png" alt="Python Correlation Heatmap">
+
+            <br><br><br> 
+            
+            <h3>1. The "Fan Effect" (Python Analysis)</h3>
+            <p>Using Python's Seaborn library, I plotted every movie as a single data point. The resulting "funnel" shape visualizes the variance in quality.</p>
+            <img src="scatter_plot.png" alt="Python Scatter Plot showing correlation">
+
+            <br><br><br>
+
+            <h3>2. Executive Dashboard (Power BI)</h3>
+            <p>An interactive view allowing stakeholders to filter by Genre and Time Period.</p>
+            <img src="IMDB_Analytics_Dashboard.pdf" alt="Power BI Dashboard Screenshot">
+        </section>
+
+        <section class="card">
+            <h2>⚙️ Technical Methodology</h2>
+            <p><strong>Phase 1: Excel Audit</strong><br>
+            Used Pivot Tables to prototype logic and identify discrepancies in how "Remakes" were counted vs. the raw CSV.</p>
+
+            <p><strong>Phase 2: SQL Engineering</strong><br>
+            Sanitized data by removing format errors (commas in titles) and hidden line breaks. Validated row counts to ensure 0% data loss during migration.</p>
+
+            <p><strong>Phase 3: Power BI</strong><br>
+            Connected directly to SQL Server. Created DAX measures for <code>Average Rating</code> and binning logic for <code>Decade</code> trends.</p>
+
+            <p><strong>Phase 4: Python</strong><br>
+            Utilized <code>pyodbc</code> to query SQL and <code>seaborn</code> to generate the heatmap and scatter plot visualizations.</p>
+        </section>
+
+        <footer>
+            <p>Project Created by [Your Name] | Hosted on GitHub</p>
+        </footer>
+    </div>
+
+</body>
+</html>
