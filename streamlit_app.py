@@ -58,7 +58,7 @@ elif category == "Resources":
 if page == "Home":
     st.title("Welcome to My Data Portfolio")
     st.markdown("""
-    ### Hello! I'm Neal Kauffman. **Computer Systems** student at Collin College transitioning into Data Analytics.
+    ### Hello! I'm Neal Kauffman. **Computer Systems** Student at Collin College Transitioning into Data Analytics.
     This portfolio is a live demonstration of my skills in **Data Analysis, SQL Transformation, Data Visualization and Python Development.**
     
     Use the navigation menu on the left to explore:
@@ -241,7 +241,7 @@ elif page == "IMDB Insights":
         "Excel Data Prep",
         "Power BI Dashboard", 
         "Python Correlation Analysis", 
-        "HTML Project Landing Page"
+        "Project Findings Page"
     ])
 
     with tab_sql:
