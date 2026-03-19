@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 import os
+import streamlit.components.v1 as components
 
 # 1. Page Configuration
 st.set_page_config(page_title="Neal Kauffman | Data Portfolio", page_icon="📊", layout="wide")
@@ -207,11 +208,12 @@ elif page == "Trivia Scoreboard":
 
 elif page == "Alien Invasion Game":
     st.title("👾 Alien Invasion: Python Game Development")
+    
     st.markdown("""
     ### Project Overview
-    This project is a 2D space shooter built entirely in Python using the **Pygame** library. 
+    This project is a classic 2D space arcade shooter built entirely in Python using the **Pygame** library. 
     It demonstrates core software engineering principles, including **Object-Oriented Programming (OOP)**, 
-    asynchronous event handling, and real-time asset management.
+    asynchronous event handling, and real-time asset management, all compiled to WebAssembly for the browser.
     """)
     
     col1, col2 = st.columns(2)
@@ -220,7 +222,7 @@ elif page == "Alien Invasion Game":
         st.write("""
         - **Dynamic Difficulty:** Alien fleet speed increases as the player progresses.
         - **Asset Management:** Custom sprite handling for ships, bullets, and enemies.
-        - **Scoring System:** High-score persistence across game sessions.
+        - **Scoring System:** High-score tracking and arcade-style auto-restarts.
         """)
         
     with col2:
@@ -231,6 +233,16 @@ import sys
 from settings import Settings
 from ship import Ship
         """, language='python')
+
+    # Add a visual divider before the playable game section
+    st.divider()
+
+    st.header("🎮 Play the Game")
+    st.info("Click the black screen below to focus the game, then use your **Spacebar** to shoot and **Left/Right Arrow Keys** to move!")
+
+    game_url = "https://ntkauffman1.github.io/alien-invasion-game/"
+
+    components.iframe(game_url, width=1200, height=850, scrolling=False)
 
 elif page == "IMDB Insights":
     st.title("🎬 Case Study: IMDB Data Warehouse")
