@@ -9,9 +9,10 @@ jobs:
   ping-portfolio:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # This is an extra safety layer for permissions
+      contents: write
     strategy:
-      fail-fast: false # This ensures if App 1 fails, App 2 still runs!
+      fail-fast: false
+      max-parallel: 1 # THIS IS THE FIX: Runs one app at a time!
       matrix:
         url: [
           "https://data-analytics-portfolio-ntkauffman.streamlit.app/",
@@ -38,10 +39,8 @@ jobs:
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          git add app_performance_log.csv *.png
+          git add app_performance_log.csv
+          git add error_*.png || echo "No errors to log"
           git commit -m "Update logs and debug screenshots [skip ci]" || exit 0
-          
-          # This line downloads changes from the other app before pushing
           git pull --rebase origin main
-          
           git push
