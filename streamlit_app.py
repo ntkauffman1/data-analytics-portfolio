@@ -41,16 +41,17 @@ if 'feedback_msg' not in st.session_state:
 # --- 2. DYNAMIC NAVIGATION SIDEBAR ---
 st.sidebar.title("Navigation")
 
+# Flipped the order of Case Studies and Games/Apps
 category = st.sidebar.selectbox("Choose a Section:", 
-    ["Main", "Games/Apps", "Case Studies", "Resources", "Site Architecture"]
+    ["Main", "Case Studies", "Games/Apps", "Resources", "Site Architecture"]
 )
 
 if category == "Main":
     page = st.sidebar.radio("Go to:", ["Home", "About Me"])
+elif category == "Case Studies":
+    page = st.sidebar.radio("Go to:", ["IMDB Insights", "More Coming Soon!"])
 elif category == "Games/Apps":
     page = st.sidebar.radio("Go to:", ["Trivia Scoreboard", "Alien Invasion Game"])
-elif category == "Case Studies":
-    page = st.sidebar.radio("Go to:", ["IMDB Insights"])
 elif category == "Resources":
     page = st.sidebar.radio("Go to:", ["Reference Guide"])
 elif category == "Site Architecture":
