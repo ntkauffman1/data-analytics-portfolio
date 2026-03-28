@@ -143,7 +143,7 @@ elif page == "System Health":
         st.info("Performance pipeline initialized. Data will appear after the next automated run.")
         st.divider()
         
-elif page == "Tech Stack, Rationale"
+elif page == "Tech Stack/Rationale":
     st.title("🛠️ Tech Stack & Architecture Rationale")
     st.markdown("""
     A data project is only as reliable as the infrastructure it runs on. 
