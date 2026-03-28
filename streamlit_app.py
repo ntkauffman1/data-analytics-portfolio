@@ -54,7 +54,7 @@ elif category == "Case Studies":
 elif category == "Resources":
     page = st.sidebar.radio("Go to:", ["Reference Guide"])
 
-# --- SYSTEM HEALTH TEASER (ADDED HERE) ---
+# --- SYSTEM HEALTH TEASER ---
 st.sidebar.markdown("---")
 st.sidebar.markdown("🟢 **System Status:** All apps online")
 st.sidebar.caption("CI/CD Pipeline: Active | Uptime: 99.9%")
@@ -77,13 +77,11 @@ if page == "Home":
 elif page == "About Me":
     st.title("About Me")
     
-    # --- ADDED SUB-TABS FOR OPTION 1 ---
-    bio_tab, health_tab = st.tabs(["Resume & Skills", "⚙️ System Health"])
+    # --- ADDED SUB-TABS FOR SYSTEM HEALTH ---
+    bio_tab, health_tab = st.tabs(["Resume & Skills", "⚙️ System Health (CI/CD)"])
     
     with bio_tab:
         # 1. ADD YOUR PHOTO HERE
-        # Ensure this filename EXACTLY matches the file in your folder!
-        # I included a try/except block so your app won't crash if the file is missing locally.
         photo_filename = "495352114_10162816845657138_4891462490022732075_n.jpg"
         
         try:
