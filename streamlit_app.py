@@ -41,7 +41,6 @@ if 'feedback_msg' not in st.session_state:
 # --- 2. DYNAMIC NAVIGATION SIDEBAR ---
 st.sidebar.title("Navigation")
 
-# ADDED "Site Architecture" to the end of the categories
 category = st.sidebar.selectbox("Choose a Section:", 
     ["Main", "Games/Apps", "Case Studies", "Resources", "Site Architecture"]
 )
@@ -55,15 +54,34 @@ elif category == "Case Studies":
 elif category == "Resources":
     page = st.sidebar.radio("Go to:", ["Reference Guide"])
 elif category == "Site Architecture":
-    # CREATED NEW ROUTE FOR SYSTEM HEALTH
     page = st.sidebar.radio("Go to:", ["System Health", "Tech Stack"])
 
-# --- SYSTEM HEALTH TEASER ---
+# --- SYSTEM HEALTH TEASER (DYNAMIC VERSION) ---
 st.sidebar.markdown("---")
-st.sidebar.markdown("🟢 **System Status:** All apps online")
-st.sidebar.caption("CI/CD Pipeline: Active | Uptime: 99.9%")
 
-# --- PAGE LOGIC ---
+# Default values
+uptime_display = "99.9%"
+status_icon = "🟢"
+
+# Calculate Live Uptime from CSV
+file_path = "app_performance_log.csv"
+if os.path.exists(file_path):
+    try:
+        stats_df = pd.read_csv(file_path, names=["Timestamp", "App", "Load Time (s)", "Status"])
+        if not stats_df.empty:
+            total_pings = len(stats_df)
+            successes = len(stats_df[stats_df["Status"] == "Success"])
+            uptime_pct = (successes / total_pings) * 100
+            uptime_display = f"{uptime_pct:.1f}%"
+            
+            # Change icon to yellow if uptime drops below 95%
+            if uptime_pct < 95:
+                status_icon = "🟡"
+    except:
+        pass
+
+st.sidebar.markdown(f"{status_icon} **System Status:** All apps online")
+st.sidebar.caption(f"CI/CD Pipeline: Active | Uptime: {uptime_display}")
 
 if page == "Home":
     st.title("Welcome to My Data Portfolio")
