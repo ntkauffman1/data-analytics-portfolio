@@ -33,11 +33,11 @@ jobs:
       - name: Run Wakeup Script
         run: python keep_alive.py ${{ matrix.url }}
 
-      - name: Commit performance log
+      - name: Commit performance log and screenshots
+        if: always() # Runs even if the script fails!
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          git add app_performance_log.csv
-          # The '|| exit 0' prevents the script from crashing if there's no data to log
-          git commit -m "Update app performance logs [skip ci]" || exit 0
+          git add app_performance_log.csv *.png
+          git commit -m "Update logs and debug screenshots [skip ci]" || exit 0
           git push
