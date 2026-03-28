@@ -598,6 +598,24 @@ FROM Movies;
         except FileNotFoundError:
             st.warning("Upload 'index.html' to GitHub to view the project.")
 
+elif page == "More Coming Soon!":
+    st.title("🎬 Case Studies")
+    st.divider()
+    
+    # Visual placeholder for under construction
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.write("") # Spacing
+        st.write("")
+        st.markdown("<h2 style='text-align: center;'>🚧 Under Construction</h2>", unsafe_allow_html=True)
+        st.write("")
+        st.info("I am currently cleaning and documenting new datasets for my next case study. Check back soon for deep dives into sales forecasting and healthcare analytics!")
+        
+        # Adding a loading spinner look-alike for effect
+        st.write("---")
+        st.caption("Status: Data Cleaning in Progress...")
+        st.progress(65)
+
 elif page == "Reference Guide":
     st.title("📚 Reference Guide")
     st.markdown("""
