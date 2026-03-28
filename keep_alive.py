@@ -20,43 +20,38 @@ options.add_argument("--disable-dev-shm-usage")
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-start_time = time.time()
+def check_app(url):
+    start_time = time.time()
+    # Try up to 3 times to find the app content
+    for attempt in range(3):
+        try:
+            print(f"Attempt {attempt + 1} for: {url}")
+            driver.get(url)
+            
+            # Look for 'Kauffman' or 'Neal' with a 45-second timeout per attempt
+            WebDriverWait(driver, 45).until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Kauffman') or contains(text(), 'Neal')]"))
+            )
+            
+            load_duration = round(time.time() - start_time, 2)
+            return load_duration, "Success"
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed. Retrying...")
+            time.sleep(5)
+    return 0, "Failed"
 
 try:
-    print(f"Tracking Performance: {target_url}")
-    driver.get(target_url)
+    duration, status = check_app(target_url)
     
-    # 1. Handle potential 'Wake Up' button (Common on Streamlit Cloud)
-    try:
-        wake_button = WebDriverWait(driver, 15).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Yes, get this app back up!')]"))
-        )
-        print("App was hibernating. Clicking Wake Up...")
-        wake_button.click()
-        time.sleep(15) # Wait for reboot
-    except:
-        pass
-
-    # 2. INCREASED PATIENCE: Wait 60 seconds for the app to fully render
-    # We search for 'Neal' or 'Kauffman'
-    WebDriverWait(driver, 60).until(
-        EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Kauffman') or contains(text(), 'Neal')]"))
-    )
-    
-    end_time = time.time()
-    load_duration = round(end_time - start_time, 2)
-    
-    # Log to CSV
+    # Log the results
     with open('app_performance_log.csv', mode='a', newline='') as f:
-        csv.writer(f).writerow([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), app_name, load_duration, "Success"])
+        csv.writer(f).writerow([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), app_name, duration, status])
         
-    print(f"Logged: {app_name} loaded in {load_duration}s")
+    if status == "Success":
+        print(f"✅ {app_name} loaded in {duration}s")
+    else:
+        print(f"❌ {app_name} failed all retries.")
+        sys.exit(1)
 
-except Exception as e:
-    # If it fails, we still want to log the failure but let the script end
-    with open('app_performance_log.csv', mode='a', newline='') as f:
-        csv.writer(f).writerow([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), app_name, 0, "Failed"])
-    print(f"Timeout or Error: {target_url}")
-    sys.exit(1)
 finally:
     driver.quit()
