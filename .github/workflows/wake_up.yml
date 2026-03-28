@@ -1,0 +1,32 @@
+name: Wake Up Portfolio Apps
+
+on:
+  schedule:
+    # Runs every 12 hours (Streamlit apps often sleep after 12-24 hrs)
+    - cron: '0 0,12 * * *'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  ping-portfolio:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        url: [
+          "https://data-analytics-portfolio-ntkauffman.streamlit.app/",
+          "https://analyst-reference-guide-ntkauffman1.streamlit.app/"
+        ]
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install selenium webdriver-manager
+
+      - name: Run Wakeup Script
+        run: python keep_alive.py ${{ matrix.url }}
