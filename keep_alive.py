@@ -1,5 +1,8 @@
 import sys
 import time
+import csv
+import os
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -9,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 target_url = sys.argv[1]
+app_name = "Portfolio" if "portfolio" in target_url else "Reference Guide"
 
 options = Options()
 options.add_argument("--headless")
@@ -17,33 +21,33 @@ options.add_argument("--disable-dev-shm-usage")
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
+start_time = time.time() # Start the timer
+
 try:
-    print(f"Checking: {target_url}")
+    print(f"Tracking Performance: {target_url}")
     driver.get(target_url)
     
-    # 1. Handle potential 'Wake Up' button
-    try:
-        wake_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Yes, get this app back up!')]"))
-        )
-        print("App was hibernating. Clicking Wake Up...")
-        wake_button.click()
-        time.sleep(20) 
-    except:
-        pass
-
-    # 2. THE HEALTH CHECK: Look for your name or a key word
-    # This ensures the app didn't just load a blank page.
-    # We look for 'Kauffman' since it's in your portfolio title.
-    WebDriverWait(driver, 20).until(
+    # Wait for the app to load content
+    WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Kauffman')]"))
     )
     
-    print(f"Verified: App is healthy and displaying content.")
+    end_time = time.time() # Stop the timer
+    load_duration = round(end_time - start_time, 2)
+    
+    # Log the data to a CSV
+    log_entry = [datetime.now().strftime("%Y-%m-%d %H:%M:%S"), app_name, load_duration, "Success"]
+    
+    with open('app_performance_log.csv', mode='a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(log_entry)
+        
+    print(f"Logged: {app_name} loaded in {load_duration}s")
 
 except Exception as e:
-    print(f"CRITICAL ERROR: App at {target_url} failed health check!")
-    print(f"Details: {e}")
-    sys.exit(1) # This tells GitHub the job FAILED so you get an email
+    with open('app_performance_log.csv', mode='a', newline='') as f:
+        csv.writer(f).writerow([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), app_name, 0, f"Failed: {str(e)[:50]}"])
+    print(f"CRITICAL ERROR: {e}")
+    sys.exit(1)
 finally:
     driver.quit()
