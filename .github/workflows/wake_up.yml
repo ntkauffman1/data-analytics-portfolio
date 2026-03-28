@@ -30,3 +30,11 @@ jobs:
 
       - name: Run Wakeup Script
         run: python keep_alive.py ${{ matrix.url }}
+
+      - name: Commit performance log
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add app_performance_log.csv
+          git commit -m "Update app performance logs [skip ci]" || echo "No changes to commit"
+          git push
