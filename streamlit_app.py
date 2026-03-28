@@ -142,8 +142,9 @@ elif page == "System Health":
     else:
         st.info("Performance pipeline initialized. Data will appear after the next automated run.")
         st.divider()
-    
-    st.header("🛠️ Tech Stack & Architecture Rationale")
+        
+elif page == "Tech Stack/Rationale"
+    st.title("🛠️ Tech Stack & Architecture Rationale")
     st.markdown("""
     A data project is only as reliable as the infrastructure it runs on. 
     Here is a breakdown of the tools I selected to build, deploy, and maintain this portfolio.
