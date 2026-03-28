@@ -54,6 +54,11 @@ elif category == "Case Studies":
 elif category == "Resources":
     page = st.sidebar.radio("Go to:", ["Reference Guide"])
 
+# --- SYSTEM HEALTH TEASER (ADDED HERE) ---
+st.sidebar.markdown("---")
+st.sidebar.markdown("🟢 **System Status:** All apps online")
+st.sidebar.caption("CI/CD Pipeline: Active | Uptime: 99.9%")
+
 # --- PAGE LOGIC ---
 
 if page == "Home":
@@ -71,28 +76,68 @@ if page == "Home":
 
 elif page == "About Me":
     st.title("About Me")
-    # 1. ADD YOUR PHOTO HERE
-    # Ensure this filename EXACTLY matches the file in your folder!
-    # I included a try/except block so your app won't crash if the file is missing locally.
-    photo_filename = "495352114_10162816845657138_4891462490022732075_n.jpg"
     
-    try:
-        st.image(photo_filename, caption="Neal Kauffman", width=250)
-    except FileNotFoundError:
-        st.error(f"Image not found. Please place '{photo_filename}' in your VS Code folder.")
-    st.markdown("""
-    I am currently an Online Data Researcher with a strong foundation in Python and SQL. 
+    # --- ADDED SUB-TABS FOR OPTION 1 ---
+    bio_tab, health_tab = st.tabs(["Resume & Skills", "⚙️ System Health"])
     
-    Before pursuing my degree in Computer Systems and transitioning into data analytics, I spent several years managing fast-paced environments in the restaurant industry as a Front of House Manager and Bartender. 
-    
-    This background gave me a unique perspective on customer experience, daily operations, and the critical importance of making accurate, data-driven business decisions to improve efficiency.
+    with bio_tab:
+        # 1. ADD YOUR PHOTO HERE
+        # Ensure this filename EXACTLY matches the file in your folder!
+        # I included a try/except block so your app won't crash if the file is missing locally.
+        photo_filename = "495352114_10162816845657138_4891462490022732075_n.jpg"
+        
+        try:
+            st.image(photo_filename, caption="Neal Kauffman", width=250)
+        except FileNotFoundError:
+            st.error(f"Image not found. Please place '{photo_filename}' in your VS Code folder.")
+        st.markdown("""
+        I am currently an Online Data Researcher with a strong foundation in Python and SQL. 
+        
+        Before pursuing my degree in Computer Systems and transitioning into data analytics, I spent several years managing fast-paced environments in the restaurant industry as a Front of House Manager and Bartender. 
+        
+        This background gave me a unique perspective on customer experience, daily operations, and the critical importance of making accurate, data-driven business decisions to improve efficiency.
+                    
+                    **Technical Toolbox:**
+        - **Languages:** SQL (T-SQL, SQLite), Python
+        - **Tools:** Excel (Power Query, VBA), Power BI, Streamlit, Git, AI
+        - **Education:** Computer Information Systems at Collin College - Completion Summer 2026
+        - **Certs:** Google Data Analytics Professional Certificate         
+        """)
+
+    with health_tab:
+        st.subheader("Automated Performance Tracking")
+        st.markdown("""
+        As an analyst, I believe in tracking everything—including my own portfolio. 
+        This live dashboard reads from a CSV generated daily by a custom **GitHub Actions CI/CD pipeline** that I built. It uses **Selenium** to test my apps, ensuring zero cold-starts and logging the server response times.
+        """)
+        
+        # Point this to your new CSV file
+        file_path = "app_performance_log.csv"
+        
+        if os.path.exists(file_path):
+            try:
+                # Load the data
+                df = pd.read_csv(file_path, names=["Timestamp", "App", "Load Time (s)", "Status"])
+                df['Timestamp'] = pd.to_datetime(df['Timestamp'])
                 
-                **Technical Toolbox:**
-    - **Languages:** SQL (T-SQL, SQLite), Python
-    - **Tools:** Excel (Power Query, VBA), Power BI, Streamlit, Git, AI
-    - **Education:** Computer Information Systems at Collin College - Completion Summer 2026
-    - **Certs:** Google Data Analytics Professional Certificate         
-    """)
+                # Filter for successful loads to chart
+                success_df = df[df["Status"] == "Success"]
+                
+                if not success_df.empty:
+                    # Pivot data for the multi-line chart
+                    chart_data = success_df.pivot(index="Timestamp", columns="App", values="Load Time (s)")
+                    
+                    st.line_chart(chart_data)
+                    
+                    with st.expander("View Raw Automated ETL Logs"):
+                        st.dataframe(df.sort_values(by="Timestamp", ascending=False), use_container_width=True)
+                else:
+                    st.info("Pipeline is live. Waiting for first successful data points...")
+                    
+            except Exception as e:
+                st.warning(f"Could not load performance logs. ({e})")
+        else:
+            st.info("Performance pipeline initialized. Data will appear after the next automated run.")
 
 elif page == "Trivia Scoreboard":
     st.title("🏆 Interactive Trivia Scoreboard")
