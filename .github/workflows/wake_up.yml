@@ -12,7 +12,7 @@ jobs:
       contents: write
     strategy:
       fail-fast: false
-      max-parallel: 1 # THIS IS THE FIX: Runs one app at a time!
+      max-parallel: 1 
       matrix:
         url: [
           "https://data-analytics-portfolio-ntkauffman.streamlit.app/",
@@ -31,16 +31,30 @@ jobs:
       - name: Install Dependencies
         run: pip install selenium webdriver-manager
 
+      - name: Refresh Repository 
+        # This grabs Job 1's CSV update before Job 2 starts!
+        run: git pull origin main
+
       - name: Run Wakeup Script
         run: python keep_alive.py ${{ matrix.url }}
 
-      - name: Commit performance log and screenshots
+      - name: Commit logs and screenshots
         if: always()
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
+          
+          # 1. Add the CSV file
           git add app_performance_log.csv
-          git add error_*.png || echo "No errors to log"
-          git commit -m "Update logs and debug screenshots [skip ci]" || exit 0
+          
+          # 2. Add screenshots ONLY if they exist (the '|| true' prevents crashes)
+          git add error_*.png || true
+          
+          # 3. Save the changes locally
+          git commit -m "Update app logs [skip ci]" || echo "No changes to commit"
+          
+          # 4. Download any new data the other app just saved to prevent traffic jams
           git pull --rebase origin main
+          
+          # 5. Push everything back to your repo
           git push
