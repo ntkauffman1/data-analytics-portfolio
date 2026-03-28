@@ -126,7 +126,11 @@ elif page == "System Health":
                 # Pivot data for the multi-line chart
                 chart_data = success_df.pivot(index="Timestamp", columns="App", values="Load Time (s)")
                 
-                st.line_chart(chart_data)
+                st.line_chart(
+                    chart_data, 
+                    x_label="Time of Ping", 
+                    y_label="Server Load Time (Seconds)")
+                                            
                 
                 with st.expander("View Raw Automated ETL Logs"):
                     st.dataframe(df.sort_values(by="Timestamp", ascending=False), use_container_width=True)
