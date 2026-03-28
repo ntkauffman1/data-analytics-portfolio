@@ -2,14 +2,16 @@ name: Wake Up Portfolio Apps
 
 on:
   schedule:
-    # Runs every 12 hours (Streamlit apps often sleep after 12-24 hrs)
     - cron: '0 0,12 * * *'
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   ping-portfolio:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # This is an extra safety layer for permissions
     strategy:
+      fail-fast: false # This ensures if App 1 fails, App 2 still runs!
       matrix:
         url: [
           "https://data-analytics-portfolio-ntkauffman.streamlit.app/",
@@ -36,5 +38,6 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add app_performance_log.csv
-          git commit -m "Update app performance logs [skip ci]" || echo "No changes to commit"
+          # The '|| exit 0' prevents the script from crashing if there's no data to log
+          git commit -m "Update app performance logs [skip ci]" || exit 0
           git push
