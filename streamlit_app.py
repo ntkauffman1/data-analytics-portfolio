@@ -56,7 +56,7 @@ elif category == "Resources":
     page = st.sidebar.radio("Go to:", ["Reference Guide"])
 elif category == "Site Architecture":
     # CREATED NEW ROUTE FOR SYSTEM HEALTH
-    page = st.sidebar.radio("Go to:", ["System Health"])
+    page = st.sidebar.radio("Go to:", ["System Health", "Tech Stack"])
 
 # --- SYSTEM HEALTH TEASER ---
 st.sidebar.markdown("---")
