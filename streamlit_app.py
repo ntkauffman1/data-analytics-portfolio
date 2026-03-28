@@ -141,6 +141,41 @@ elif page == "System Health":
             st.warning(f"Could not load performance logs. ({e})")
     else:
         st.info("Performance pipeline initialized. Data will appear after the next automated run.")
+        st.divider()
+    
+    st.header("🛠️ Tech Stack & Architecture Rationale")
+    st.markdown("""
+    A data project is only as reliable as the infrastructure it runs on. 
+    Here is a breakdown of the tools I selected to build, deploy, and maintain this portfolio.
+    """)
+
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.info("""
+        **Frontend & Hosting:** Streamlit Community Cloud
+        
+        Chosen for its ability to rapidly deploy Python-based data applications. It allows me to bridge the gap between complex data logic and a clean user interface without the overhead of maintaining a separate React or JavaScript frontend.
+        """)
+        
+        st.success("""
+        **Database Engine:** SQLite
+        
+        Selected for the IMDB Case Study to provide lightweight, embedded SQL querying. By compiling the database locally at runtime, I avoid the latency, API bottlenecks, and costs associated with a dedicated cloud database for static portfolio data.
+        """)
+        
+    with col2:
+        st.warning("""
+        **Automation & CI/CD:** GitHub Actions + Selenium
+        
+        Used to engineer a custom ETL testing pipeline. To prevent the free-tier server from hibernating, a headless Chrome browser spins up twice a day on an Ubuntu virtual machine, verifies the UI renders correctly, and commits the performance logs back to the repository.
+        """)
+        
+        st.error("""
+        **Data Processing:** Pandas 
+        
+        The core engine for my data manipulation. Utilized heavily across the portfolio for fast CSV parsing, programmatic data transformation, and feeding clean, structured data into the Streamlit visualization layers.
+        """)
 
 elif page == "Trivia Scoreboard":
     st.title("🏆 Interactive Trivia Scoreboard")
