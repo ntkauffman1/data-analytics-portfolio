@@ -8,7 +8,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
-# Get URL from GitHub Action argument
 target_url = sys.argv[1]
 
 options = Options()
@@ -19,25 +18,32 @@ options.add_argument("--disable-dev-shm-usage")
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 try:
-    print(f"Visiting: {target_url}")
+    print(f"Checking: {target_url}")
     driver.get(target_url)
     
-    # Wait to see if the 'Wake Up' button appears (if app is hibernating)
+    # 1. Handle potential 'Wake Up' button
     try:
         wake_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Yes, get this app back up!')]"))
         )
-        print("App was sleeping. Clicking 'Wake Up' button...")
+        print("App was hibernating. Clicking Wake Up...")
         wake_button.click()
-        time.sleep(20) # Give it extra time to boot up
+        time.sleep(20) 
     except:
-        print("App is already awake or button not found. Proceeding...")
+        pass
 
-    # Final wait to ensure Streamlit websockets connect
-    time.sleep(10)
-    print(f"Success! Current page title: {driver.title}")
+    # 2. THE HEALTH CHECK: Look for your name or a key word
+    # This ensures the app didn't just load a blank page.
+    # We look for 'Kauffman' since it's in your portfolio title.
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Kauffman')]"))
+    )
+    
+    print(f"Verified: App is healthy and displaying content.")
 
 except Exception as e:
-    print(f"Error: {e}")
+    print(f"CRITICAL ERROR: App at {target_url} failed health check!")
+    print(f"Details: {e}")
+    sys.exit(1) # This tells GitHub the job FAILED so you get an email
 finally:
     driver.quit()
