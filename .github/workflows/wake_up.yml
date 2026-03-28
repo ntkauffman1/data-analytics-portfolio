@@ -34,10 +34,14 @@ jobs:
         run: python keep_alive.py ${{ matrix.url }}
 
       - name: Commit performance log and screenshots
-        if: always() # Runs even if the script fails!
+        if: always()
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add app_performance_log.csv *.png
           git commit -m "Update logs and debug screenshots [skip ci]" || exit 0
+          
+          # This line downloads changes from the other app before pushing
+          git pull --rebase origin main
+          
           git push
