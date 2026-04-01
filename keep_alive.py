@@ -43,8 +43,11 @@ def check_app(url):
             print(f"Attempt {attempt + 1} failed. Details: {str(e)[:100]}")
             # Take a screenshot on the last failure to debug
             if attempt == 2:
-                driver.save_screenshot(f"error_{app_id}.png")
-            time.sleep(10)
+                timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+                error_filename = f"error_{appid}_{timestamp}.png"
+                driver.save_screenshot(error_filename)
+                print(f"Screenshot saved: {error_filename}")
+                time.sleep(10)  # Optional now with timestamped files
     return 0, "Failed"
 
 try:
