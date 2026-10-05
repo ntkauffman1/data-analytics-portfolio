@@ -5,7 +5,7 @@ import os
 import streamlit.components.v1 as components
 
 # 1. Page Configuration
-st.set_page_config(page_title="Neal Kauffman | Data Portfolio", page_icon="📊", layout="wide")
+st.set_page_config(page_title="Neal Kauffman | Professional Portfolio", page_icon="📊", layout="wide")
 
 # --- CUSTOM CSS FOR HIGH-VISIBILITY TABS ---
 st.markdown("""
@@ -87,9 +87,13 @@ st.sidebar.caption(f"CI/CD Pipeline: Active | Uptime: {uptime_display}")
 if page == "Home":
     st.title("Welcome to My Data Portfolio")
     st.markdown("""
-    ### Hello! I'm Neal Kauffman. **Computer Systems** Student at Collin College Transitioning into Data Analytics.
-    This portfolio is a live demonstration of my skills in **Data Analysis, SQL Transformation, Data Visualization and Python Development.**
-    
+    ### Hello! I’m Neal Kauffman, a Technology Management student at East Texas A&M University and a graduate of Collin College, where I earned an Associate of Applied Science in Computer Information Systems.
+
+This portfolio began as a showcase for my data analytics work and is growing into a broader collection of projects across information technology, systems, data, and technology management.
+
+Currently hosted: data analytics projects, SQL work, Python development, and data visualization.
+
+Coming soon: systems administration, IT project management, Windows and Linux labs, networking, scripting, and IBM Z/mainframe-related work.
     Use the navigation menu on the left to explore:
     - **IMDB Insights:** A full ETL pipeline from Excel to SQL and Power BI.
     - **Interactive Apps:** Custom-built Python tools like the Trivia Scoreboard.
