@@ -85,7 +85,7 @@ st.sidebar.markdown(f"{status_icon} **System Status:** All apps online")
 st.sidebar.caption(f"CI/CD Pipeline: Active | Uptime: {uptime_display}")
 
 if page == "Home":
-    st.title("Welcome to My Data Portfolio")
+    st.title("Welcome to My Professional Portfolio")
     st.markdown("""
     ### Hello! I’m Neal Kauffman, a Technology Management student at East Texas A&M University and a graduate of Collin College, where I earned an Associate of Applied Science in Computer Information Systems.
 
@@ -94,6 +94,7 @@ This portfolio began as a showcase for my data analytics work and is growing int
 Currently hosted: data analytics projects, SQL work, Python development, and data visualization.
 
 Coming soon: systems administration, IT project management, Windows and Linux labs, networking, scripting, and IBM Z/mainframe-related work.
+    
     Use the navigation menu on the left to explore:
     - **IMDB Insights:** A full ETL pipeline from Excel to SQL and Power BI.
     - **Interactive Apps:** Custom-built Python tools like the Trivia Scoreboard.
