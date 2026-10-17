@@ -7,7 +7,7 @@ import streamlit.components.v1 as components
 # 1. Page Configuration
 st.set_page_config(page_title="Neal Kauffman | Professional Portfolio", page_icon="📊", layout="wide")
 
-# --- CUSTOM CSS FOR HIGH-VISIBILITY TABS ---
+# --- CUSTOM CSS FOR HIGH-VISIBILITY TABS & HOME CARDS ---
 st.markdown("""
     <style>
     /* Make the tab text much larger and bold (Adjusted to 18px to fit 5 tabs) */
@@ -24,6 +24,41 @@ st.markdown("""
     div[data-baseweb="tab-highlight"] {
         background-color: #ff4b4b !important;
         height: 4px !important;
+    }
+    /* Card layout for Home Directory */
+    .nav-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+        margin-bottom: 25px;
+    }
+    .nav-card {
+        background-color: var(--secondary-background-color, #1e2530);
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        border-radius: 12px;
+        padding: 20px;
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-card:hover {
+        transform: translateY(-4px);
+        border-color: #ff4b4b;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+    .nav-card-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-color, #ffffff);
+    }
+    .nav-card-desc {
+        font-size: 0.9rem;
+        color: rgba(200, 200, 200, 0.85);
+        line-height: 1.45;
+        margin: 0;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -49,7 +84,12 @@ category = st.sidebar.selectbox("Choose a Section:",
 if category == "Main":
     page = st.sidebar.radio("Go to:", ["Home", "About Me"])
 elif category == "Case Studies":
-    page = st.sidebar.radio("Go to:", ["IMDB Insights", "More Coming Soon!"])
+    page = st.sidebar.radio("Go to:", [
+        "IMDB Insights", 
+        "ITPM Prioritization Business Case", 
+        "Systems Analysis & Architecture", 
+        "More Coming Soon!"
+    ])
 elif category == "Games/Apps":
     page = st.sidebar.radio("Go to:", ["Trivia Scoreboard", "Alien Invasion Game"])
 elif category == "Resources":
@@ -94,12 +134,37 @@ This portfolio began as a showcase for my data analytics work and is growing int
 Currently hosted: data analytics projects, SQL work, Python development, and data visualization.
 
 Coming soon: systems administration, IT project management, Windows and Linux labs, networking, scripting, and IBM Z/mainframe-related work.
-    
-    Use the navigation menu on the left to explore:
-    - **IMDB Insights:** A full ETL pipeline from Excel to SQL and Power BI.
-    - **Interactive Apps:** Custom-built Python tools like the Trivia Scoreboard.
-    - **Game Dev:** Logic and structure for a Python-based space shooter.
     """)
+    
+    st.markdown("""
+    <p style="font-size: 1.05rem; opacity: 0.9;">
+        Use the navigation menu on the left to explore:
+    </p>
+
+    <div class="nav-container">
+        <div class="nav-card">
+            <div class="nav-card-title">🎬 IMDB Insights</div>
+            <p class="nav-card-desc">Full ETL pipeline extracting raw records into SQL and Power BI dashboards.</p>
+        </div>
+        <div class="nav-card">
+            <div class="nav-card-title">📋 ITPM Business Case</div>
+            <p class="nav-card-desc">Executive project prioritization matrix, financial ROI models, and cost-reduction analysis.</p>
+        </div>
+        <div class="nav-card">
+            <div class="nav-card-title">🏗️ Systems Analysis & Arch</div>
+            <p class="nav-card-desc">End-to-end SDLC order system case study: DFDs, UML models, 3NF SQL schema, and 3-tier AWS architecture.</p>
+        </div>
+        <div class="nav-card">
+            <div class="nav-card-title">🛠️ Interactive Apps</div>
+            <p class="nav-card-desc">Custom-built Python tools, game logic, and dynamic state engines like the Trivia Scoreboard.</p>
+        </div>
+        <div class="nav-card">
+            <div class="nav-card-title">👾 Game Dev</div>
+            <p class="nav-card-desc">Object-oriented architecture, collision logic, and loop engines for a Python space shooter.</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.info("Select a project from the sidebar to get started!")
 
 elif page == "About Me":
@@ -313,7 +378,6 @@ elif page == "Trivia Scoreboard":
                 st.session_state.feedback_msg = "READY TO PLAY"
                 st.rerun()
 
-
 elif page == "Alien Invasion Game":
     st.title("👾 Alien Invasion: Python Game Development")
     
@@ -367,7 +431,7 @@ elif page == "IMDB Insights":
     with tab_sql:
         st.subheader("🔍 SQL Portfolio Showcase")
         
-       # --- NEW ADDITION: Download SQL file ---
+        # --- NEW ADDITION: Download SQL file ---
         try:
             with open("IMDB_Project_Queries_Revised.sql", "rb") as sql_file:
                 st.download_button(
@@ -576,7 +640,7 @@ FROM Movies;
         except FileNotFoundError:
             st.warning("Upload 'movie_analysis.py' to GitHub to view the code.")
 
-# =========================================================================
+    # =========================================================================
     # TAB 5: HTML SUMMARY
     # =========================================================================
     with tab_html:
@@ -602,6 +666,393 @@ FROM Movies;
                 st.download_button("⬇️ Download Raw index.html", data=f, file_name="index.html", mime="text/html")
         except FileNotFoundError:
             st.warning("Upload 'index.html' to GitHub to view the project.")
+
+elif page == "ITPM Prioritization Business Case":
+    st.title("📋 IT Project Evaluation & Prioritization")
+    st.subheader("Manage Your Health, INC — Executive Business Case[cite: 1]")
+
+    st.markdown("""
+    > **Context:** Executive assessment evaluating four competing IT initiatives to reduce operational costs, modernize infrastructure, and recover capital from an estimated 20% excess in healthcare premiums across 20,000 full-time employees[cite: 1].
+    """)
+
+    # Executive Summary Metrics
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric(
+            label="Top Priority Initiative",
+            value="Wellness Intranet",
+            help="Recommended based on fast payback period and immediate cost reduction[cite: 1]."
+        )
+    with col2:
+        st.metric(
+            label="Projected Annual Savings",
+            value="$600,000",
+            delta="Immediate Cost Reduction[cite: 1]"
+        )
+    with col3:
+        st.metric(
+            label="Estimated Initial Cost",
+            value="$200,000"
+        )
+    with col4:
+        st.metric(
+            label="Payback Period",
+            value="< 6 Months",
+            delta="Rapid ROI[cite: 1]"
+        )
+
+    st.markdown("---")
+
+    st.subheader("📊 Strategic Evaluation Matrix")
+
+    portfolio_data = [
+        {
+            "Project Name": "Recreation and Wellness Intranet",
+            "Strategic Focus": "Internal Cost Reduction",
+            "Upfront Cost": 200000,
+            "Net Annual Benefit": 600000,
+            "4-Year Net Value": 2200000,
+            "Strategic Impact": "High",
+            "Key Non-Financial Benefit": "Employee health, retention, and morale"
+        },
+        {
+            "Project Name": "Health Coverage Business Model",
+            "Strategic Focus": "Cost Reduction & App Dev",
+            "Upfront Cost": 100000,
+            "Net Annual Benefit": 400000,
+            "4-Year Net Value": 1500000,
+            "Strategic Impact": "High",
+            "Key Non-Financial Benefit": "Data-driven leverage for premium negotiations"
+        },
+        {
+            "Project Name": "Cross-Selling System",
+            "Strategic Focus": "Revenue Growth",
+            "Upfront Cost": 800000,
+            "Net Annual Benefit": 200000,
+            "4-Year Net Value": 0,
+            "Strategic Impact": "Medium",
+            "Key Non-Financial Benefit": "Customer retention via targeted discounting"
+        },
+        {
+            "Project Name": "Web-Enhanced Comms System",
+            "Strategic Focus": "Web Ops & Delivery Optimization",
+            "Upfront Cost": 3000000,
+            "Net Annual Benefit": 1400000,
+            "4-Year Net Value": 2600000,
+            "Strategic Impact": "High (Deferred)",
+            "Key Non-Financial Benefit": "Streamlined supply chain logistics"
+        }
+    ]
+
+    df_itpm = pd.DataFrame(portfolio_data)
+
+    st.dataframe(
+        df_itpm,
+        column_config={
+            "Upfront Cost": st.column_config.NumberColumn(format="$%d"),
+            "Net Annual Benefit": st.column_config.NumberColumn(format="$%d/yr"),
+            "4-Year Net Value": st.column_config.NumberColumn(format="$%d"),
+        },
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.markdown("---")
+
+    st.subheader("🔍 Financial Back-Up & Projections")
+
+    tab_itpm1, tab_itpm2, tab_itpm3, tab_itpm4 = st.tabs([
+        "1. Recreation & Wellness Intranet",
+        "2. Health Coverage Model",
+        "3. Cross-Selling System",
+        "4. Web-Enhanced Comms"
+    ])
+
+    with tab_itpm1:
+        st.markdown("""
+        * **Employee Base:** 20,000 full-time employees[cite: 1]
+        * **Per-Employee Savings:** $30 / employee / year[cite: 1]
+        * **Gross Annual Savings:** **$600,000 / year**[cite: 1]
+        * **4-Year Cumulative Savings:** **$2,400,000**[cite: 1]
+        * **Implementation Cost:** $200,000[cite: 1]
+        * **Verdict:** **Immediate Priority.** Fully recovers upfront implementation costs within 4 to 5 months of rollout (well before the 6-month deadline)[cite: 1].
+        """)
+
+    with tab_itpm2:
+        st.markdown("""
+        * **Employee Base:** 20,000 full-time employees[cite: 1]
+        * **Per-Employee Savings:** $20 / employee / year[cite: 1]
+        * **Gross Annual Savings:** **$400,000 / year**[cite: 1]
+        * **4-Year Cumulative Savings:** **$1,600,000**[cite: 1]
+        * **Implementation Cost:** $100,000[cite: 1]
+        * **Verdict:** High ROI secondary candidate[cite: 1]. Combining this with the Wellness Intranet yields **$1,000,000/yr in recurring operational savings** against an initial combined $300,000 investment[cite: 1].
+        """)
+
+    with tab_itpm3:
+        st.markdown("""
+        * **Gross Annual Revenue:** $1,000,000[cite: 1]
+        * **Recurring Maintenance / Dev Cost:** $800,000 / year[cite: 1]
+        * **Net Annual Profit:** **$200,000 / year**[cite: 1]
+        * **Verdict:** **Requires Re-evaluation.** High maintenance overhead cuts margins down to 20%[cite: 1]. Recommend negotiating vendor/development costs before committing capital[cite: 1].
+        """)
+
+    with tab_itpm4:
+        st.markdown("""
+        * **Initial Investment:** $3,000,000 (Year 1)[cite: 1]
+        * **Gross Annual Operational Savings:** $2,000,000 / year[cite: 1]
+        * **Annual Maintenance (20%):** $600,000 / year[cite: 1]
+        * **Net Annual Benefit:** **$1,400,000 / year** (starting Year 2)[cite: 1]
+        * **Verdict:** Offers the largest absolute long-term savings, but demands significant upfront capital[cite: 1]. Recommended as a phase-two initiative after short-term savings are secured[cite: 1].
+        """)
+
+    with st.expander("📌 View Recommendation & Phased Implementation Memo"):
+        st.markdown("""
+        ### Final Recommendation Memo
+        1. **Phase 1 (Immediate Execution):** Greenlight the **Recreation and Wellness Intranet Project** ($200k cost) and **Health Coverage Business Model** ($100k cost)[cite: 1]. Combined, they yield ~$1,000,000 in immediate recurring annual savings on a modest $300,000 total outlay[cite: 1].
+        2. **Phase 2 (Long-term Infrastructure):** Sequence the **Web-Enhanced Communications System** once early Phase 1 cash flows normalize, offsetting the $3.0M upfront capital requirement[cite: 1].
+        3. **Phase 3 (Scope Reassessment):** Pause the **Cross-Selling System** until maintenance and development overhead can be engineered down to a sustainable operating ratio[cite: 1].
+        """)
+
+elif page == "Systems Analysis & Architecture":
+    st.title("🏗️ Systems Analysis & Cloud Architecture")
+    st.subheader("Mackinac Gnomes Order Management System (OMS)[cite: 20]")
+    st.caption("Authored by Neal Kauffman | Comprehensive Systems Analysis & SDLC Deliverable[cite: 20]")
+
+    st.markdown("""
+    > **Executive Summary:** A complete, phased systems analysis transitioning Mackinac Gnomes from a single, error-prone spreadsheet to a secure, cloud-native transactional web portal[cite: 20]. This case study covers stakeholder elicitation, process modeling (DFDs & UML), third-normal-form (3NF) relational design, and a multi-tier AWS VPC architecture[cite: 20].
+    """)
+
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric(label="System Baseline", value="2.6 / 5.0", delta="Legacy User Rating", delta_color="inverse")
+    with col2:
+        st.metric(label="Usage Velocity", value="75%", delta="Accesses ≥ 6x Daily")
+    with col3:
+        st.metric(label="Automation Priority", value="50 / 50 Split", help="50% automated shipping labels vs 50% automated sales calculation[cite: 20]")
+    with col4:
+        st.metric(label="Security Posture", value="3-Tier VPC", delta="Subnet Defense in Depth[cite: 20]")
+
+    st.markdown("---")
+
+    tab_sa1, tab_sa2, tab_sa3, tab_sa4, tab_sa5, tab_sa6 = st.tabs([
+        "📊 Requirements & Surveys",
+        "🔄 Data Flow Diagrams (DFDs)",
+        "📐 UML & Logic Models",
+        "🗄️ Relational Schema (3NF)",
+        "☁️ Cloud Architecture & Memo",
+        "📅 WBS & Implementation Plan"
+    ])
+
+    with tab_sa1:
+        st.header("1. Stakeholder Requirements Gathering & Feedback Analysis")
+        st.markdown("""
+        Requirements were gathered from key organizational roles (**Sales**, **Accounting**, and **Creation/Production**) to identify root-cause inefficiencies in the existing order tracking spreadsheet[cite: 20].
+        """)
+
+        col_q1, col_q2 = st.columns(2)
+        with col_q1:
+            st.subheader("Spreadsheet Daily Usage Frequency")
+            df_usage = pd.DataFrame({
+                "Access Frequency": ["1–5 times / day", "6–15 times / day", "15+ times / day (Heavy users)"],
+                "Respondents": ["25%", "25%", "50%"]
+            })
+            st.dataframe(df_usage, hide_index=True, use_container_width=True)
+            st.warning("⚠️ **Core Bottleneck:** 75% of users accessed the spreadsheet 6+ times a day, leading to concurrency collisions and overwrites[cite: 20].")
+
+        with col_q2:
+            st.subheader("Primary Automation Driver")
+            df_auto = pd.DataFrame({
+                "Automated Capability Requested": [
+                    "Auto-generating shipping labels/tickets",
+                    "Auto-calculating weekly sales",
+                    "Alerting production when sale finalized",
+                    "Sending confirmation emails to customers"
+                ],
+                "Preference": ["50%", "50%", "0%", "0%"]
+            })
+            st.dataframe(df_auto, hide_index=True, use_container_width=True)
+            st.info("💡 **Finding:** User demand was evenly divided between logistics (shipping ticket creation) and finance (automated weekly reporting)[cite: 20].")
+
+        with st.expander("🔍 View Peer Review & Iterative Survey Enhancements"):
+            st.markdown("""
+            #### Peer Review Cycle & Survey Refinements
+            * **Xavier Infante:** Validated the necessity of **Refund and Replacement Status fields** to trace damaged and missing product deliveries[cite: 20].
+            * **Ethan Gardner:** Recommended converting fixed single-issue dropdowns into open-ended inputs to prevent constraining feedback[cite: 20]. Resulted in stakeholder requests for **Commission Tracking** and **Refund Macros**[cite: 20].
+            * **Izzy Bledsoe:** Validated deep feature ranking; recommended optional flag criteria for non-applicable workflows[cite: 20].
+            * **Daniel Parker:** Addressed layout consistency and field indentation alignment[cite: 20].
+            """)
+
+    with tab_sa2:
+        st.header("2. Process Decomposition & Data Flow Diagrams (DFD)")
+
+        col_dfd_l, col_dfd_r = st.columns(2)
+        with col_dfd_l:
+            st.markdown("#### Context Diagram (Level 0 - Legacy)")
+            st.code("""
+[ Customer ] ──( Order & Payment )──▶ [ 0: Order Spreadsheet ]
+                                             │
+      ┌────────────────┬─────────────────────┼────────────────────┐
+      ▼                ▼                     ▼                    ▼
+[ Receipt ]     [ Shipping Ticket ]    [ Card Deposits ]   [ Sales Report ]
+      │                │                     │                    │
+[ Customer ]     [ Shipping ]             [ Bank ]          [ Accounting ]
+            """, language="text")
+            st.caption("Legacy State: A central spreadsheet acts as a manual bottleneck across all functions[cite: 20].")
+
+        with col_dfd_r:
+            st.markdown("#### Diagram 0 (Proposed Modular System)")
+            st.code("""
+[ Customer ] ──( Order & Payment )──▶ [ 1.0: Log Sale ] ──▶ [ Bank ]
+                                             │ (Sales Record)
+                                             ▼
+                                     [( D1: Orders Store )]
+                                       │              │
+                     ┌─────────────────┘              └──────────────────┐
+                     ▼                                                   ▼
+            [ 2.0: Ship Product ]                              [ 3.0: Produce Report ]
+                     │ (Shipping Request)                                │
+                     ▼                                                   ▼
+               [ Shipping ]                                       [ Accounting ]
+            """, language="text")
+            st.caption("Target State: Isolated functional modules reading/writing to a centralized data store[cite: 20].")
+
+        st.markdown("---")
+        st.markdown("#### Level 1 DFD Explosion Workflows")
+
+        exp_col1, exp_col2 = st.columns(2)
+        with exp_col1:
+            st.markdown("**Process 1.0: Log Sale (Explosion)**")
+            st.markdown("""
+            1. **1.1 Capture Sales Data:** Receive item, customer, and payment payload[cite: 20].
+            2. **1.2 Validate Payment:** Transmit authorization request to Bank API; evaluate status[cite: 20].
+            3. **1.3 Update Orders Database:** Write confirmed `SALES RECORD` into transactional storage[cite: 20].
+            4. **1.4 Generate Customer Receipt:** Produce transaction confirmation and push receipt to Customer[cite: 20].
+            """)
+
+        with exp_col2:
+            st.markdown("**Process 2.0: Ship Product (Explosion)**")
+            st.markdown("""
+            1. **2.1 Verify Order Readiness:** Poll `Orders Store` for valid, paid transactions[cite: 20].
+            2. **2.2 Generate Shipping Label:** Query carrier API (USPS/UPS); capture tracking token[cite: 20].
+            3. **2.3 Update Shipping Status:** Mutate database status to `Shipped` and trigger tracking notifications[cite: 20].
+            """)
+
+    with tab_sa3:
+        st.header("3. UML Behavioral Diagrams & System Logic")
+
+        st.markdown("#### Formal Decision Table: Fulfillment Dispatch Criteria")
+        decision_data = {
+            "Condition / Action": [
+                "Condition: Sale is Logged?",
+                "Condition: Payment Received & Approved?",
+                "Condition: Shipping Label Created?",
+                "Action: Ship Product",
+                "Action: Hold / Do Not Ship"
+            ],
+            "Rule 1 (Happy Path)": ["Y", "Y", "Y", "✅ EXECUTE", "—"],
+            "Rule 2 (Label Failure)": ["Y", "Y", "N", "—", "🛑 HOLD (Label Retry)"],
+            "Rule 3 (Payment Failure)": ["Y", "N", "—", "—", "🛑 HOLD (Payment Denied)"]
+        }
+        st.table(pd.DataFrame(decision_data))
+
+        st.markdown("---")
+        st.markdown("#### UML Sequence Architecture: Order Authorization")
+        st.code("""
+Salesperson           Order System              Credit Card Gateway         Database
+    │                      │                             │                     │
+    ├─── submitSale() ────▶│                             │                     │
+    │                      ├─── validatePayment() ──────▶│                     │
+    │                      │◀── Approved / Denied ───────┤                     │
+    │                      │                                                   │
+    │                      ├─── finalizeOrder() ──────────────────────────────▶│
+    │                      │◀── Write Success ─────────────────────────────────┤
+    │                      │                                                   │
+    │◀── Return Receipt ───┤                                                   │
+        """, language="text")
+
+    with tab_sa4:
+        st.header("4. Database Normalization & 3NF Implementation")
+        st.markdown("""
+        Decomposed legacy multi-column records into **Third Normal Form (3NF)** in PostgreSQL, decoupling customers, sales reps, line items, and shipping tracking[cite: 20].
+        """)
+
+        st.markdown("#### Relational Entities & Structural Keys")
+        st.markdown("""
+        * **`orders`:** Primary transactional entity (`id` PK, `sale_date`, `location_enum`, `salesperson_id` FK, `status_enum`, `amount_paid`, `notes`)[cite: 20].
+        * **`line_item` & `items`:** Resolves order-to-product cardinality (`line_item` PK/FK bridge tracking `orders_id`, `item_id`, `quantity`)[cite: 20].
+        * **`shipping` & `shipping_method`:** Decoupled carrier metadata (`tracking_id`, `shipping_cost`, `shipping_method` PK)[cite: 20].
+        * **`credit_card_log`:** Auditable, tokenized merchant authorization logs (`cc_validation`, `orders_id` FK)[cite: 20].
+        * **`employee`:** Internal personnel mapping (`id` PK, `name`, `employee_type`)[cite: 20].
+        """)
+
+        st.markdown("#### Normalized Analytical View Query")
+        st.code("""
+SELECT 
+    'Neal Kauffman' AS Generated_By,
+    o.id AS order_id, 
+    o.sale_date, 
+    o.location,
+    e.name AS salesperson, 
+    i.name AS item_name, 
+    o.status, 
+    o.amount_paid,
+    ccl.cc_validation, 
+    s.shipping_method, 
+    s.shipping_cost, 
+    o.notes
+FROM orders o
+LEFT JOIN line_item li ON li.orders_id = o.id
+LEFT JOIN items i ON i.id = li.item_id
+LEFT JOIN credit_card_log ccl ON ccl.orders_id = o.id
+LEFT JOIN shipping s ON s.orders_id = o.id
+LEFT JOIN employee e ON e.id = o.salesperson_id;
+        """, language="sql")
+
+    with tab_sa5:
+        st.header("5. Target AWS Cloud Architecture & Engineering Memo")
+
+        st.markdown("""
+        ### Technical Implementation Memo
+        * **To:** Mackinac Gnomes Steering Committee[cite: 20]
+        * **From:** Neal Kauffman, Systems Analyst[cite: 20]
+        * **Date:** April 30, 2026[cite: 20]
+        * **Subject:** Production System Architecture & Deployment Blueprint[cite: 20]
+        """)
+
+        arch_c1, arch_c2 = st.columns(2)
+        with arch_c1:
+            st.markdown("""
+            #### Network Segmentation (Defense in Depth)
+            * **Public Web Subnet:** Ingress through an AWS Application Load Balancer (ALB) enforcing SSL/TLS termination[cite: 20]. Web servers serve UI/mockup assets[cite: 20].
+            * **Private Application Subnet:** API layer housing application logic, processing JSON transactions, and executing third-party API calls[cite: 20].
+            * **Private Data Subnet:** Fully isolated PostgreSQL RDS tier with zero direct public internet ingress, accepting incoming traffic strictly on port 5432 from the Application Subnet[cite: 20].
+            """)
+
+        with arch_c2:
+            st.markdown("""
+            #### Elastic Scalability & Redundancy
+            * **Application Load Balancer:** Automatically distributes traffic bursts during high-volume seasonal demand[cite: 20].
+            * **Decoupled 3rd-Party Integration:** Offloads payment tokenization and dynamic shipping rate calculations to external webhooks, minimizing system state overhead[cite: 20].
+            """)
+
+    with tab_sa6:
+        st.header("6. Work Breakdown Structure (WBS) & Timeline")
+        
+        wbs_data = [
+            {"ID": 1, "Task Name": "Create Project Shell Documentation", "Start": "2/16/2026", "Finish": "2/16/2026", "Duration": "1 day", "Predecessors": "—"},
+            {"ID": 2, "Task Name": "Survey Users & Requirements Gathering", "Start": "2/17/2026", "Finish": "2/23/2026", "Duration": "5 days", "Predecessors": "1FS"},
+            {"ID": 3, "Task Name": "Create Preliminary Architecture Plan", "Start": "2/17/2026", "Finish": "2/18/2026", "Duration": "2 days", "Predecessors": "1FS"},
+            {"ID": 4, "Task Name": "Produce Data Flow Diagrams (Context, DFD 0, L1)", "Start": "2/24/2026", "Finish": "2/27/2026", "Duration": "4 days", "Predecessors": "2FS, 3FS"},
+            {"ID": 5, "Task Name": "Produce UML Diagrams (Use Case, Activity, Sequence)", "Start": "2/19/2026", "Finish": "2/24/2026", "Duration": "4 days", "Predecessors": "3FS"},
+            {"ID": 6, "Task Name": "Stakeholder Feedback & Diagram Revision", "Start": "3/2/2026", "Finish": "3/9/2026", "Duration": "6 days", "Predecessors": "4FS, 5FS"},
+            {"ID": 7, "Task Name": "Create UI Wireframes & Mockups", "Start": "3/5/2026", "Finish": "3/12/2026", "Duration": "6 days", "Predecessors": "6FS"},
+            {"ID": 8, "Task Name": "Produce 3NF ERD & SQL Data DDL", "Start": "3/5/2026", "Finish": "3/11/2026", "Duration": "5 days", "Predecessors": "6FS"},
+            {"ID": 9, "Task Name": "Produce Cloud System Architecture Specification", "Start": "3/12/2026", "Finish": "3/17/2026", "Duration": "4 days", "Predecessors": "6FS, 8FS"},
+            {"ID": 10, "Task Name": "Executive Presentation & Recording", "Start": "3/5/2026", "Finish": "3/25/2026", "Duration": "15 days", "Predecessors": "6FS"},
+            {"ID": 11, "Task Name": "Warranty & Hypercare Support", "Start": "3/26/2026", "Finish": "4/6/2026", "Duration": "8 days", "Predecessors": "10FS"}
+        ]
+        
+        st.dataframe(pd.DataFrame(wbs_data), hide_index=True, use_container_width=True)
 
 elif page == "More Coming Soon!":
     st.title("🎬 Case Studies")
