@@ -834,7 +834,8 @@ elif page == "Systems Analysis & Architecture":
 
     st.markdown("---")
 
-    tab_sa1, tab_sa2, tab_sa3, tab_sa4, tab_sa5, tab_sa6 = st.tabs([
+    tab_slides, tab_sa1, tab_sa2, tab_sa3, tab_sa4, tab_sa5, tab_sa6 = st.tabs([
+        "📑 Slide Presentation",
         "📊 Requirements & Surveys",
         "🔄 Data Flow Diagrams (DFDs)",
         "📐 UML & Logic Models",
@@ -842,6 +843,48 @@ elif page == "Systems Analysis & Architecture":
         "☁️ Cloud Architecture & Memo",
         "📅 WBS & Implementation Plan"
     ])
+
+    # ----------------- TAB: SLIDE PRESENTATION VIEWER -----------------
+    with tab_slides:
+        st.header("📑 Executive Systems Analysis Deck")
+        st.markdown("Scroll through the complete slide presentation below, or download the PDF directly.")
+
+        pdf_path = "Mackinac Gnomes Order Management System pdf.pdf"
+
+        if os.path.exists(pdf_path):
+            import base64
+
+            with open(pdf_path, "rb") as f:
+                pdf_bytes = f.read()
+                base64_pdf = base64.b64encode(pdf_bytes).decode("utf-8")
+
+            # Action controls
+            c_dl1, c_dl2 = st.columns([1, 3])
+            with c_dl1:
+                st.download_button(
+                    label="⬇️ Download Presentation (.pdf)",
+                    data=pdf_bytes,
+                    file_name="Mackinac_Gnomes_Systems_Analysis.pdf",
+                    mime="application/pdf"
+                )
+
+            # Native browser scrollable PDF embed
+            pdf_display = f'''
+                <iframe
+                    src="data:application/pdf;base64,{base64_pdf}"
+                    width="100%"
+                    height="850"
+                    type="application/pdf"
+                    style="border-radius: 8px; border: 1px solid rgba(128, 128, 128, 0.3);">
+                </iframe>
+            '''
+            st.markdown(pdf_display, unsafe_allow_html=True)
+        else:
+            st.warning("Presentation file 'Mackinac Gnomes Order Management System pdf.pdf' not found in repo root.")
+            st.link_button(
+                "📂 View Presentation on GitHub ↗️",
+                "https://github.com/ntkauffman1/professional-portfolio/blob/main/Mackinac%20Gnomes%20Order%20Management%20System%20pdf.pdf"
+            )
 
     with tab_sa1:
         st.header("1. Stakeholder Requirements Gathering & Feedback Analysis")
