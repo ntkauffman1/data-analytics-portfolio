@@ -1,2 +1,2 @@
-# data-analytics-portfolio
+# professional-portfolio
 Portfolio for Neal Kauffman
