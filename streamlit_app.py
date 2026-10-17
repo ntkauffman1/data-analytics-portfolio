@@ -847,44 +847,45 @@ elif page == "Systems Analysis & Architecture":
     # ----------------- TAB: SLIDE PRESENTATION VIEWER -----------------
     with tab_slides:
         st.header("📑 Executive Systems Analysis Deck")
-        st.markdown("Scroll through the complete slide presentation below, or download the PDF directly.")
+        st.markdown("Scroll through the complete slide presentation below, or download the original file directly.")
 
-        pdf_path = "Mackinac Gnomes Order Management System pdf.pdf"
+        pdf_filename = "Mackinac Gnomes Order Management System pdf.pdf"
+        github_raw_url = "https://raw.githubusercontent.com/ntkauffman1/professional-portfolio/main/Mackinac%20Gnomes%20Order%20Management%20System%20pdf.pdf"
+        github_blob_url = "https://github.com/ntkauffman1/professional-portfolio/blob/main/Mackinac%20Gnomes%20Order%20Management%20System%20pdf.pdf"
 
-        if os.path.exists(pdf_path):
-            import base64
-
-            with open(pdf_path, "rb") as f:
-                pdf_bytes = f.read()
-                base64_pdf = base64.b64encode(pdf_bytes).decode("utf-8")
-
-            # Action controls
-            c_dl1, c_dl2 = st.columns([1, 3])
-            with c_dl1:
+        # Action Buttons
+        c_dl1, c_dl2 = st.columns([1, 2])
+        with c_dl1:
+            if os.path.exists(pdf_filename):
+                with open(pdf_filename, "rb") as f:
+                    st.download_button(
+                        label="⬇️ Download Presentation (.pdf)",
+                        data=f.read(),
+                        file_name="Mackinac_Gnomes_Systems_Analysis.pdf",
+                        mime="application/pdf"
+                    )
+            else:
                 st.download_button(
                     label="⬇️ Download Presentation (.pdf)",
-                    data=pdf_bytes,
-                    file_name="Mackinac_Gnomes_Systems_Analysis.pdf",
-                    mime="application/pdf"
+                    data=b"",
+                    disabled=True,
+                    help="File not found locally in root directory."
                 )
 
-            # Native browser scrollable PDF embed
-            pdf_display = f'''
-                <iframe
-                    src="data:application/pdf;base64,{base64_pdf}"
-                    width="100%"
-                    height="850"
-                    type="application/pdf"
-                    style="border-radius: 8px; border: 1px solid rgba(128, 128, 128, 0.3);">
-                </iframe>
-            '''
-            st.markdown(pdf_display, unsafe_allow_html=True)
-        else:
-            st.warning("Presentation file 'Mackinac Gnomes Order Management System pdf.pdf' not found in repo root.")
-            st.link_button(
-                "📂 View Presentation on GitHub ↗️",
-                "https://github.com/ntkauffman1/professional-portfolio/blob/main/Mackinac%20Gnomes%20Order%20Management%20System%20pdf.pdf"
-            )
+        with c_dl2:
+            st.link_button("📂 View Source on GitHub ↗️", github_blob_url)
+
+        st.markdown("---")
+
+        # Primary Embed: Google Docs PDF Engine (Fully compliant with Chrome & Comet sandboxes)
+        viewer_url = f"https://docs.google.com/gview?url={github_raw_url}&embedded=true"
+
+        st.components.v1.iframe(
+            src=viewer_url,
+            width=1100,
+            height=750,
+            scrolling=True
+        )
 
     with tab_sa1:
         st.header("1. Stakeholder Requirements Gathering & Feedback Analysis")
