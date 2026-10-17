@@ -14,10 +14,10 @@ target_url = sys.argv[1]
 app_id = "portfolio" if "portfolio" in target_url else "guide"
 
 options = Options()
-options.add_argument("--headless")
+options.add_argument("--headless=new")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
-# Simulate a real laptop screen size
+# Simulate a standard laptop screen size
 options.add_argument("--window-size=1920,1080")
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -44,10 +44,10 @@ def check_app(url):
             # Take a screenshot on the last failure to debug
             if attempt == 2:
                 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
-                error_filename = f"error_{appid}_{timestamp}.png"
+                error_filename = f"error_{app_id}_{timestamp}.png"
                 driver.save_screenshot(error_filename)
                 print(f"Screenshot saved: {error_filename}")
-                time.sleep(10)  # Optional now with timestamped files
+                time.sleep(10)
     return 0, "Failed"
 
 try:
